@@ -6,7 +6,7 @@ fun main() {
     val scanner = Scanner(System.`in`)
 
     val field = initField(scanner)
-    val game = GameManager(field)
+    val game = GameManager(field,scanner)
 
     while (!game.over) {
         game.printField()
