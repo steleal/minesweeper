@@ -16,7 +16,7 @@ class Field(val size: Int = 9, val mines: Int = 10) {
     private fun increaseCountersOfMines() {
         for (i in 0..last){
             for (j in 0..last) {
-                if (cells[i][i].mine) {
+                if (cells[i][j].mine) {
                     increaseCounterforEachNeighbor(i,j)
                 }
             }
