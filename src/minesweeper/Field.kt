@@ -71,14 +71,39 @@ class Field(val size: Int = 9, val mines: Int = 10) {
 
     fun openedToString(): String {
         val printField = StringBuilder()
-        cells.forEach {
-            it.joinTo(printField, "") { cell ->
-                cell.stateToString()
-            }
-            printField.appendln()
+        printField.appendHeader(size)
+        printField.appendDelimiter(size)
+        for (i in 0..last){
+            printField.appendRow(cells[i],i)
         }
+        printField.appendDelimiter(size)
         return printField.toString()
     }
+}
+
+private fun java.lang.StringBuilder.appendRow(cells: Array<Cell>, i: Int) {
+    this.append((i+1) % 10)
+    this.append("│")
+    cells.joinTo(this, "") { cell ->
+        cell.stateToString()
+    }
+    this.appendln("│")
+}
+
+private fun java.lang.StringBuilder.appendHeader(columns: Int) {
+    this.append(" │")
+    for (i in 1..columns) {
+        this.append(i % 10)
+    }
+    this.appendln("│")
+}
+
+private fun java.lang.StringBuilder.appendDelimiter(columns: Int) {
+    this.append("—│")
+    repeat(columns) {
+        this.append("—")
+    }
+    this.appendln("│")
 }
 
 private fun Cell.stateToString(): String {

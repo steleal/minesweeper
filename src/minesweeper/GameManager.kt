@@ -11,11 +11,21 @@ class GameManager(val field: Field, val scanner: Scanner) {
     }
 
     fun nextStep() {
-        val (x, y) = askMarkCoordinates()
-        val cell = field.getCell(x, y) ?: return
+        val (i, j) = askMarkCoordinates()
+        val cell = field.getCell(i, j) ?: return
         cell.mineFlag = !cell.mineFlag
         win = checkWinState(field)
         over = win//TODO checkEndOfGame()
+    }
+
+    fun openMineNeighbors() {
+        field.cells.forEach {
+            it.forEach { cell ->
+                if (cell.cntOfmineInNeighbors > 0) {
+                    cell.open = true
+                }
+            }
+        }
     }
 
     private fun checkWinState(field: Field): Boolean {
@@ -27,16 +37,18 @@ class GameManager(val field: Field, val scanner: Scanner) {
         return true
     }
 
-    fun askMarkCoordinates(): Pair<Int, Int> {
-        var x = -1
-        var y = -1
-        while (!isAcceptable(x, y)) {
+    private fun askMarkCoordinates(): Pair<Int, Int> {
+        var i = -1
+        var j = -1
+        while (!isAcceptable(i, j)) {
             print("Set/delete mines marks (x and y coordinates): ")
-            x = scanner.nextInt()
-            y = scanner.nextInt()
-            printIfOpenedCell(field.getCell(x, y))
+            val x = scanner.nextInt()
+            val y = scanner.nextInt()
+            i = y - 1
+            j = x - 1
+            printIfOpenedCell(field.getCell(i, j))
         }
-        return Pair(x, y)
+        return Pair(i, j)
     }
 
     private fun printIfOpenedCell(cell: Cell?) {
@@ -49,16 +61,8 @@ class GameManager(val field: Field, val scanner: Scanner) {
         }
     }
 
-    fun isAcceptable(x: Int, y: Int): Boolean {
+    private fun isAcceptable(x: Int, y: Int): Boolean {
         return field.existsCell(x, y) &&
                 !field.isOpenCell(x, y)
-    }
-
-    fun openMineNeighbors() {
-        field.cells.forEach {
-            it.forEach { cell ->
-                if (cell.cntOfmineInNeighbors>0) cell.open = true
-            }
-        }
     }
 }
