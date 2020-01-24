@@ -9,14 +9,29 @@ class Field(val size: Int = 9, val mines: Int = 10) {
     val cells = Array(size) { Array(size) { Cell(false) } }
 
     init {
+        createMines()
+        increaseCountersOfMines()
+    }
+
+    private fun increaseCountersOfMines() {
+        for (i in 0..last){
+            for (j in 0..last) {
+                if (cells[i][i].mine) {
+                    increaseCounterforEachNeighbor(i,j)
+                }
+            }
+        }
+    }
+
+    private fun createMines() {
         while (countOfMine < mines) {
             val row = Random.nextInt(size)
             val column = Random.nextInt(size)
             if (!addMine(row, column)) continue
-            increaseCounterforEachNeighbor(row, column)
             countOfMine++
         }
     }
+
 
     fun existsCell(row: Int, column: Int): Boolean {
         return row in 0..last

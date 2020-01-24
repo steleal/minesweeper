@@ -53,4 +53,12 @@ class GameManager(val field: Field, val scanner: Scanner) {
         return field.existsCell(x, y) &&
                 !field.isOpenCell(x, y)
     }
+
+    fun openMineNeighbors() {
+        field.cells.forEach {
+            it.forEach { cell ->
+                if (cell.cntOfmineInNeighbors>0) cell.open = true
+            }
+        }
+    }
 }

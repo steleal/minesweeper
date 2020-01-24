@@ -8,6 +8,8 @@ fun main() {
     val field = initField(scanner)
     val game = GameManager(field,scanner)
 
+    game.openMineNeighbors()
+
     while (!game.over) {
         game.printField()
         game.nextStep()
