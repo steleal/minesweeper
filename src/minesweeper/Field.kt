@@ -6,7 +6,7 @@ class Field(val size: Int = 9, val mines: Int = 10) {
     private val last = size - 1
     private var countOfMine = 0
 
-    private val cells = Array(size) { Array(size) { Cell(false) } }
+    val cells = Array(size) { Array(size) { Cell(false) } }
 
     init {
         while (countOfMine < mines) {
@@ -21,6 +21,11 @@ class Field(val size: Int = 9, val mines: Int = 10) {
     fun existsCell(row: Int, column: Int): Boolean {
         return row in 0..last
                 && column in 0..last
+    }
+
+    fun getCell(row: Int, column: Int): Cell? {
+        if (!existsCell(row, column)) return null
+        return cells[row][column]
     }
 
     fun isOpenCell(row: Int, column: Int): Boolean {
