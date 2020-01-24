@@ -6,7 +6,7 @@ class Field(val size: Int = 9, val mines: Int = 10) {
     private val last = size - 1
     private var countOfMine = 0
 
-    private val cells = Array(size) { Array(size) { Cell(CellValue.EMPTY) } }
+    private val cells = Array(size) { Array(size) { Cell(false) } }
 
     init {
         while (countOfMine < mines) {
@@ -24,14 +24,14 @@ class Field(val size: Int = 9, val mines: Int = 10) {
     }
 
     fun isOpenCell(row: Int, column: Int): Boolean {
-        return cells[row][column].isOpen()
+        return cells[row][column].open
     }
 
     private fun addMine(row: Int, column: Int): Boolean {
         if (!existsCell(row, column)) return false
-        if (cells[row][column].isMine()) return false
+        if (cells[row][column].mine) return false
 
-        cells[row][column].value = CellValue.MINE
+        cells[row][column].mine = true
         return true
     }
 
@@ -42,25 +42,36 @@ class Field(val size: Int = 9, val mines: Int = 10) {
             val neighborRow = row + it.first
             val neighborColumn = column + it.second
 
-            if (existsCell(neighborRow, neighborColumn) &&
-                    !cells[neighborRow][neighborColumn].isMine()) {
-                cells[neighborRow][neighborColumn].value = CellValue.MINE
+            if (existsCell(neighborRow, neighborColumn)) {
+                val neighbor = cells[neighborRow][neighborColumn]
+                if (!neighbor.mine) neighbor.cntOfmineInNeighbors++
             }
         }
     }
-}
-/*    fun allToString(): String {
+
+    fun openedToString(): String {
         val printField = StringBuilder()
         cells.forEach {
-            it.joinTo(printField, "") {
-                when (it) {
-                    0 -> BLANK
-                    MINE_NUM -> MINE
-                    else -> it.toString()
-                }
+            it.joinTo(printField, "") { cell ->
+                cell.stateToString()
             }
             printField.appendln()
         }
         return printField.toString()
     }
-*/
+}
+
+private fun Cell.stateToString(): String {
+    if (open) {
+        return when {
+            mine -> "X"
+            cntOfmineInNeighbors > 0 -> cntOfmineInNeighbors.toString()
+            else -> "/" //cntOfMineInNeighbors == 0
+        }
+    }
+    // if close
+    return when {
+        mineFlag -> "*"
+        else -> "."
+    }
+}
