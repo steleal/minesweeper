@@ -17,7 +17,7 @@ fun main() {
         game.printField()
         congratulation()
     } else {
-        game.openMines()
+        game.openCellsWithMines()
         game.printField()
         sorry()
     }

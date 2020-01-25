@@ -1,6 +1,6 @@
 package minesweeper
 
-fun Field.openedToString(): String {
+fun Field.cellsToString(): String {
     val printField = StringBuilder()
 
     printField.appendHeader(size)
