@@ -1,19 +1,20 @@
 package minesweeper
 
 fun Field.openedToString(): String {
-    val last = this.size-1
     val printField = StringBuilder()
+
     printField.appendHeader(size)
     printField.appendDelimiter(size)
-    for (i in 0..last) {
-        printField.appendRow(cells[i], i)
+    for (i in cells.indices) {
+        printField.appendRow(cells[i], i + 1)
     }
     printField.appendDelimiter(size)
+
     return printField.toString()
 }
 
-private fun StringBuilder.appendRow(cells: Array<Cell>, i: Int) {
-    this.append((i + 1) % 10)
+private fun StringBuilder.appendRow(cells: Array<Cell>, rowNumber: Int) {
+    this.append(rowNumber % 10)
     this.append("│")
     cells.joinTo(this, "") { cell ->
         cell.stateToString()
