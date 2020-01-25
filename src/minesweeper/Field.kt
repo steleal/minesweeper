@@ -14,15 +14,15 @@ class Field(val size: Int = 9, val mines: Int = 10) {
 
     init {
         createMines()
-        increaseCountersOfMines()
+        calculateMineCounters()
     }
 
-    private fun increaseCountersOfMines() {
-        for (i in 0..last) {
-            for (j in 0..last) {
-                if (cells[i][j].mine) {
-                    increaseCounterforEachNeighbor(i, j)
-                }
+    fun calculateMineCounters() {
+        forEachCell { it.cntOfmineInNeighbors = 0 }
+
+        forEachCell { cell ->
+            if (cell.mine) {
+                increaseCounterforEachNeighbor(cell)
             }
         }
     }
@@ -36,6 +36,13 @@ class Field(val size: Int = 9, val mines: Int = 10) {
         }
     }
 
+    fun forEachCell(action: (Cell) -> Unit) {
+        cells.forEach { line ->
+            line.forEach { cell ->
+                cell.apply(action)
+            }
+        }
+    }
 
     fun existsCell(row: Int, column: Int): Boolean {
         return row in 0..last
@@ -59,20 +66,20 @@ class Field(val size: Int = 9, val mines: Int = 10) {
         return true
     }
 
-    private fun increaseCounterforEachNeighbor(row: Int, column: Int) {
-        val neighbors = getNeighbors(row, column)
+    private fun increaseCounterforEachNeighbor(cell: Cell) {
+        val neighbors = getNeighbors(cell)
 
         neighbors.forEach { neighbor ->
             if (!neighbor.mine) neighbor.cntOfmineInNeighbors++
         }
     }
 
-    fun getNeighbors(row: Int, column: Int): List<Cell> {
+    fun getNeighbors(cell: Cell): List<Cell> {
         val neighbors = arrayOf(Pair(-1, -1), Pair(-1, 0), Pair(-1, 1), Pair(0, -1), Pair(0, 1), Pair(1, -1), Pair(1, 0), Pair(1, 1))
         val list = mutableListOf<Cell>()
         neighbors.forEach {
-            val neighborRow = row + it.first
-            val neighborColumn = column + it.second
+            val neighborRow = cell.i + it.first
+            val neighborColumn = cell.j + it.second
             if (existsCell(neighborRow, neighborColumn)) {
                 list.add(cells[neighborRow][neighborColumn])
             }
