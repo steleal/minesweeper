@@ -8,22 +8,23 @@ fun main() {
     val field = initField(scanner)
     val game = GameManager(field,scanner)
 
-    game.openMineNeighbors()
-
     while (!game.over) {
         game.printField()
         game.nextStep()
     }
 
-    when {
-        game.win -> congratulation()
-        else -> sorry()
+    if (game.win) {
+        congratulation()
+    } else {
+        game.openMines()
+        game.printField()
+        sorry()
     }
 
 }
 
 private fun sorry() {
-    println("You lose!")
+    println("You stepped on a mine and failed!")
 }
 
 private fun congratulation() {

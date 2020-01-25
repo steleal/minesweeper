@@ -69,6 +69,19 @@ class Field(val size: Int = 9, val mines: Int = 10) {
         }
     }
 
+    fun getNeighbors(row: Int, column: Int): List<Cell> {
+        val neighbors = arrayOf(Pair(-1, -1), Pair(-1, 0), Pair(-1, 1), Pair(0, -1), Pair(0, 1), Pair(1, -1), Pair(1, 0), Pair(1, 1))
+        val list = mutableListOf<Cell>()
+        neighbors.forEach {
+            val neighborRow = row + it.first
+            val neighborColumn = column + it.second
+            if (existsCell(neighborRow, neighborColumn)) {
+                list.add( cells[neighborRow][neighborColumn])
+            }
+        }
+        return list
+    }
+
     fun openedToString(): String {
         val printField = StringBuilder()
         printField.appendHeader(size)
