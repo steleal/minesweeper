@@ -16,7 +16,7 @@ class GameManager(val field: Field, val scanner: Scanner) {
         val cell = field.getCell(i, j) ?: return
         when (op) {
             "free" -> openCell(cell)
-            "mine" -> setMark(i, j)
+            "mine" -> setMark(cell)
         }
 
         win = checkWinState(field)
@@ -45,7 +45,7 @@ class GameManager(val field: Field, val scanner: Scanner) {
         val freeCell = findFreeCell(field) ?: return
         cell.mine = false
         freeCell.mine = true
-        field.calculateMineCounters()
+        field.recalculateMineCounters()
     }
 
     private fun findFreeCell(field: Field): Cell? {
@@ -57,8 +57,7 @@ class GameManager(val field: Field, val scanner: Scanner) {
         return null
     }
 
-    private fun setMark(row: Int, column: Int) {
-        val cell = field.getCell(row, column) ?: return
+    private fun setMark(cell: Cell) {
         cell.mineFlag = !cell.mineFlag
     }
 
@@ -118,7 +117,6 @@ class GameManager(val field: Field, val scanner: Scanner) {
     }
 
     private fun isAcceptable(x: Int, y: Int): Boolean {
-        return field.existsCell(x, y) &&
-                !field.isOpenCell(x, y)
+        return field.getCell(x,y)?.open ?: false
     }
 }
