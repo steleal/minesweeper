@@ -36,7 +36,9 @@ class GameManager(val field: Field, val scanner: Scanner) {
             return
         }
         val neighbors = field.getNeighbors(cell)
-        neighbors.forEach { ::openCell }
+        neighbors.forEach {
+            openCell(it)
+        }
     }
 
     private fun moveMineFrom(cell: Cell) {
@@ -71,7 +73,8 @@ class GameManager(val field: Field, val scanner: Scanner) {
     private fun checkWinState(field: Field): Boolean {
         field.cells.forEach {
             it.forEach { cell ->
-                if (cell.mineFlag != cell.mine) return false
+                if (!cell.open && cell.mineFlag && !cell.mine) return false
+                if (cell.open && cell.mine) return false
             }
         }
         return true
