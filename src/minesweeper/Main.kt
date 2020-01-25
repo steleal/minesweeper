@@ -14,6 +14,7 @@ fun main() {
     }
 
     if (game.win) {
+        game.printField()
         congratulation()
     } else {
         game.openMines()
