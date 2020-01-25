@@ -13,31 +13,47 @@ class GameManager(val field: Field, val scanner: Scanner) {
 
     fun nextStep() {
         val (i, j, op) = askOperation()
-
+        val cell = field.getCell(i, j) ?: return
         when (op) {
-            "free" -> openCell(i, j)//cell.open = true
-            "mine" -> setMark(i, j)//
+            "free" -> openCell(cell)
+            "mine" -> setMark(i, j)
         }
 
         win = checkWinState(field)
         over = checkOverState(field)
     }
 
-    private fun openCell(row: Int, column: Int) {
-        val cell = field.getCell(row, column) ?: return
+    private fun openCell(cell: Cell) {
         if (cell.open) return
 
         if (!openFirstCell) {
             openFirstCell = true
-            if (cell.mine) moveMineFrom(row, column)
+            if (cell.mine) moveMineFrom(cell)
         }
 
-        if (cell.cntOfmineInNeighbors>0 || cell.mine) {
+        if (cell.cntOfmineInNeighbors > 0 || cell.mine) {
             cell.open
             return
         }
-        //откроем каждого соседа
+        val neighbors = field.getNeighbors(cell)
+        neighbors.forEach { ::openCell }
 
+    }
+
+    private fun moveMineFrom(cell: Cell) {
+        val freeCell = findFreeCell(field) ?: return
+        cell.mine = false
+        freeCell.mine = true
+        field.calculateMineCounters()
+    }
+
+    private fun findFreeCell(field: Field): Cell? {
+        for (line in field.cells) {
+            for (cell in line) {
+                if (!cell.mine) return cell
+            }
+        }
+        return null
     }
 
     private fun setMark(row: Int, column: Int) {
