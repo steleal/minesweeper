@@ -31,13 +31,12 @@ class GameManager(val field: Field, val scanner: Scanner) {
             if (cell.mine) moveMineFrom(cell)
         }
 
+        cell.open = true
         if (cell.cntOfmineInNeighbors > 0 || cell.mine) {
-            cell.open
             return
         }
         val neighbors = field.getNeighbors(cell)
         neighbors.forEach { ::openCell }
-
     }
 
     private fun moveMineFrom(cell: Cell) {
