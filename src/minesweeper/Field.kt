@@ -6,7 +6,11 @@ class Field(val size: Int = 9, val mines: Int = 10) {
     private val last = size - 1
     private var countOfMine = 0
 
-    val cells = Array(size) { Array(size) { Cell(false) } }
+    val cells = Array(size) { i ->
+        Array(size) { j ->
+            Cell(i, j)
+        }
+    }
 
     init {
         createMines()
@@ -14,10 +18,10 @@ class Field(val size: Int = 9, val mines: Int = 10) {
     }
 
     private fun increaseCountersOfMines() {
-        for (i in 0..last){
+        for (i in 0..last) {
             for (j in 0..last) {
                 if (cells[i][j].mine) {
-                    increaseCounterforEachNeighbor(i,j)
+                    increaseCounterforEachNeighbor(i, j)
                 }
             }
         }
@@ -56,16 +60,10 @@ class Field(val size: Int = 9, val mines: Int = 10) {
     }
 
     private fun increaseCounterforEachNeighbor(row: Int, column: Int) {
-        val neighbors = arrayOf(Pair(-1, -1), Pair(-1, 0), Pair(-1, 1), Pair(0, -1), Pair(0, 1), Pair(1, -1), Pair(1, 0), Pair(1, 1))
+        val neighbors = getNeighbors(row, column)
 
-        neighbors.forEach {
-            val neighborRow = row + it.first
-            val neighborColumn = column + it.second
-
-            if (existsCell(neighborRow, neighborColumn)) {
-                val neighbor = cells[neighborRow][neighborColumn]
-                if (!neighbor.mine) neighbor.cntOfmineInNeighbors++
-            }
+        neighbors.forEach { neighbor ->
+            if (!neighbor.mine) neighbor.cntOfmineInNeighbors++
         }
     }
 
@@ -76,7 +74,7 @@ class Field(val size: Int = 9, val mines: Int = 10) {
             val neighborRow = row + it.first
             val neighborColumn = column + it.second
             if (existsCell(neighborRow, neighborColumn)) {
-                list.add( cells[neighborRow][neighborColumn])
+                list.add(cells[neighborRow][neighborColumn])
             }
         }
         return list
@@ -86,8 +84,8 @@ class Field(val size: Int = 9, val mines: Int = 10) {
         val printField = StringBuilder()
         printField.appendHeader(size)
         printField.appendDelimiter(size)
-        for (i in 0..last){
-            printField.appendRow(cells[i],i)
+        for (i in 0..last) {
+            printField.appendRow(cells[i], i)
         }
         printField.appendDelimiter(size)
         return printField.toString()
@@ -95,7 +93,7 @@ class Field(val size: Int = 9, val mines: Int = 10) {
 }
 
 private fun java.lang.StringBuilder.appendRow(cells: Array<Cell>, i: Int) {
-    this.append((i+1) % 10)
+    this.append((i + 1) % 10)
     this.append("│")
     cells.joinTo(this, "") { cell ->
         cell.stateToString()
