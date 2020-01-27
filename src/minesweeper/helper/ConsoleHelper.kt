@@ -6,6 +6,8 @@ class ConsoleHelper(private val scanner: Scanner) : IOHelper {
 
     override fun print(msg: String) = println(msg)
 
+    override fun askString(msg: String) = askForInput(scanner::next, msg)
+
     override fun askLine(msg: String) = askForInput(scanner::nextLine, msg)
 
     override fun askInt(msg: String) = askForInput(scanner::nextInt, msg)
