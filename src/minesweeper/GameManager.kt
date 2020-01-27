@@ -1,14 +1,18 @@
 package minesweeper
 
-import java.util.Scanner
+import processor.IOHelper
 
-class GameManager(val field: Field, val scanner: Scanner) {
+class GameManager(
+        val field: Field,
+        val helper: IOHelper
+) {
     var over: Boolean = false
     var win: Boolean = false
     var openFirstCell = false
 
+
     fun printField() {
-        println(field.cellsToString())
+        helper.print(field.cellsToString())
     }
 
     fun nextStep() {
@@ -98,10 +102,10 @@ class GameManager(val field: Field, val scanner: Scanner) {
         var op = ""
 
         while (!isAcceptable(i, j)) {
-            print("Set/unset mines marks or claim a cell as free: ")
-            val x = scanner.nextInt()
-            val y = scanner.nextInt()
-            op = scanner.next()
+            helper.print("Set/unset mines marks or claim a cell as free: ")
+            val x = helper.askInt()
+            val y = helper.askInt()
+            op = helper.askString()
 
             i = y - 1
             j = x - 1
@@ -116,8 +120,8 @@ class GameManager(val field: Field, val scanner: Scanner) {
     private fun Cell.printErrorIfOpen() {
         if (this.open) {
             when (this.cntOfmineInNeighbors) {
-                0 -> println("Here is an open cell!")
-                else -> println("There is a number here!")
+                0 -> helper.print("Here is an open cell!")
+                else -> helper.print("There is a number here!")
             }
         }
     }
