@@ -1,12 +1,14 @@
 package minesweeper
 
+import processor.ConsoleHelper
+import processor.IOHelper
 import java.util.Scanner
 
 fun main() {
-    val scanner = Scanner(System.`in`)
+    val helper = ConsoleHelper(Scanner(System.`in`))
 
-    val field = initField(scanner)
-    val game = GameManager(field,scanner)
+    val field = initField(helper)
+    val game = GameManager(field, helper)
 
     while (!game.over) {
         game.printField()
@@ -15,27 +17,27 @@ fun main() {
 
     if (game.win) {
         game.printField()
-        congratulation()
+        congratulation(helper)
     } else {
         game.openCellsWithMines()
         game.printField()
-        sorry()
+        sorry(helper)
     }
 
 }
 
-private fun sorry() {
-    println("You stepped on a mine and failed!")
+private fun sorry(helper: IOHelper) {
+    helper.print("You stepped on a mine and failed!")
 }
 
-private fun congratulation() {
-    println("Congratulations! You found all mines!")
+private fun congratulation(helper: IOHelper) {
+    helper.print("Congratulations! You found all mines!")
 }
 
-private fun initField(scanner: Scanner): Field {
-    println("How many mines do you want on the field?")
+private fun initField(helper: IOHelper): Field {
+    helper.print("How many mines do you want on the field?")
     return Field(
             size = 9,
-            mines = scanner.nextInt()
+            mines = helper.askInt()
     )
 }
